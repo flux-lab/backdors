@@ -187,8 +187,8 @@ if (!isLoggedIn()) {
         <title>Login</title>
         <style>
             body {
-                background-color: #0f0f0f;
-                color: #00ff00;
+                background-color: #FFFFFF;
+                color: #FFFFFF;
                 font-family: 'Courier New', Courier, monospace;
                 display: flex;
                 justify-content: center;
@@ -197,20 +197,20 @@ if (!isLoggedIn()) {
                 margin: 0;
             }
             .login-box {
-                background-color: #0b0b0b;
+                background-color: #FFFFFF;
                 padding: 20px;
-                border: 1px solid #00ff00;
+                border: 1px solid #FFFFFF;
                 border-radius: 8px;
-                box-shadow: 0 0 10px #00ff00;
+                box-shadow: 0 0 10px #FFFFFF;
             }
             input[type="password"], input[type="submit"] {
                 display: block;
                 width: 100%;
                 padding: 10px;
                 margin: 10px 0;
-                background-color: #0b0b0b;
-                border: 1px solid #00ff00;
-                color: #00ff00;
+                background-color: #FFFFFF;
+                border: 1px solid #FFFFFF;
+                color: #FFFFFF;
                 font-family: 'Courier New', Courier, monospace;
             }
             input[type="submit"] {
